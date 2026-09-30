@@ -13,7 +13,8 @@ RUNTIME_OBJECTS := \
 	$(BUILD)/runtime/memory.o \
 	$(BUILD)/runtime/trace.o \
 	$(BUILD)/startup/boot.o \
-	$(BUILD)/startup/vectors.o
+	$(BUILD)/startup/vectors.o \
+	$(BUILD)/startup/irq.o
 
 OBJECTS := $(CORE_OBJECT) $(RUNTIME_OBJECTS)
 DEPENDENCIES := $(OBJECTS:.o=.d)
