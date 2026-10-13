@@ -7,7 +7,7 @@
  // The main kernel/shell reads characters out of it.
 
 #define UART_RX_BUFFER_SIZE 32
- 
+
 static volatile char uart_rx_buffer[UART_RX_BUFFER_SIZE];
 static volatile uint32_t uart_rx_head = 0;
 static volatile uint32_t uart_rx_tail = 0;
@@ -27,7 +27,7 @@ static void uart0_irq_handler(void)
         uint32_t next =
             (uart_rx_head + 1U) % UART_RX_BUFFER_SIZE;
 
-        
+
          //Only store the byte if the software buffer has room.
         if (next != uart_rx_tail) {
             uart_rx_buffer[uart_rx_head] = byte;
@@ -42,6 +42,8 @@ int uart_getc(char *out)
 {
     int available = 0;
 
+    uint32_t cpsr;
+    __asm__ volatile("mrs %0, cpsr" : "=r"(cpsr));
     minemu_irq_disable();
 
     if (uart_rx_head != uart_rx_tail) {
@@ -53,7 +55,9 @@ int uart_getc(char *out)
         available = 1;
     }
 
-    minemu_irq_enable();
+    if ((cpsr & UINT32_C(0x80)) == 0U) {
+        minemu_irq_enable();
+    }
 
     return available;
 }
