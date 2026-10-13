@@ -6,7 +6,7 @@
  // The UART interrupt handler writes characters into this buffer.
  // The main kernel/shell reads characters out of it.
 
-#define UART_RX_BUFFER_SIZE 32
+#define UART_RX_BUFFER_SIZE (MINEMU_UART_RX_CAPACITY + 1U)
 
 static volatile char uart_rx_buffer[UART_RX_BUFFER_SIZE];
 static volatile uint32_t uart_rx_head = 0;
